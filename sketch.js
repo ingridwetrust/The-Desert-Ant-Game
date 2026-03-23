@@ -48,39 +48,39 @@ var enemies;
 var collectable_bounce_ypos;
 var amplitude = 10.0;       // Height of wave
 /////////////////////////////Ending////////////////////////////////////
-function preload()
-{
-    soundFormats('mp3','wav');
-    
+//function preload()
+//{
+//    soundFormats('mp3','wav');
+//    
     //BACKGROUND sound
-    backgroundSound = loadSound('assets/PinkCaddy.mp3');
-    backgroundSound.setVolume(0.1);
+//    backgroundSound = loadSound('assets/PinkCaddy.mp3');
+//    backgroundSound.setVolume(0.1);
 
     //JUMP sound
-    jumpSound = loadSound('assets/Jump.mp3');
-    jumpSound.setVolume(0.1);
+//    jumpSound = loadSound('assets/Jump.mp3');
+//    jumpSound.setVolume(0.1);
     
     //WATER sound
-    waterSound.push(loadSound('assets/Droplet1.mp3'))
-    waterSound.push(loadSound('assets/Droplet2.mp3'))
-    waterSound.push(loadSound('assets/Droplet3.mp3'))
-    waterSound[0].setVolume(0.1); 
-    waterSound[1].setVolume(0.1); 
-    waterSound[2].setVolume(0.1); 
+//    waterSound.push(loadSound('assets/Droplet1.mp3'))
+//    waterSound.push(loadSound('assets/Droplet2.mp3'))
+//    waterSound.push(loadSound('assets/Droplet3.mp3'))
+//    waterSound[0].setVolume(0.1); 
+//    waterSound[1].setVolume(0.1); 
+//    waterSound[2].setVolume(0.1); 
     
     //CARCRASH sound
-    crashSound = loadSound('assets/carcrash3.mp3')
-    crashSound.setVolume(0.4);
+//    crashSound = loadSound('assets/carcrash3.mp3')
+//    crashSound.setVolume(0.4);
     
     //ARMADILLO sound
-    armadilloSound = loadSound('assets/Armadillo.mp3')
+//    armadilloSound = loadSound('assets/Armadillo.mp3')
     
     //GAMEOVER sound
-    gameoverSound = loadSound('assets/Gameover.mp3')
+//    gameoverSound = loadSound('assets/Gameover.mp3')
     
     //WINNING sound
-    winningSound = loadSound('assets/Winning.mp3')
-    winningSound.setVolume(5);
+//    winningSound = loadSound('assets/Winning.mp3')
+//    winningSound.setVolume(5);
     
     //FONT
     font = loadFont('fonts/PressStart2P-Regular.ttf')
