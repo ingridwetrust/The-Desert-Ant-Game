@@ -54,8 +54,6 @@ function preload()
 
     //BACKGROUND sound
     backgroundSound = loadSound('assets/PinkCaddy.mp3');
-	backgroundSound.loop();
-	
     backgroundSound.setVolume(0.1);
 
     //JUMP sound
@@ -91,6 +89,7 @@ function preload()
 function setup()
 {
     createCanvas(1024, 576);
+    backgroundSound.loop();
     floorPos_y = height * 3/4;
     lives = 5;
     startGame();
