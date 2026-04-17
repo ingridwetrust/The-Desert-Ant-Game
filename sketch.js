@@ -54,6 +54,8 @@ function preload()
 
     //BACKGROUND sound
     backgroundSound = loadSound('assets/PinkCaddy.mp3');
+	backgroundSound.loop();
+	
     backgroundSound.setVolume(0.1);
 
     //JUMP sound
@@ -326,10 +328,6 @@ function draw()
 
 function keyPressed()
 {
-	{
-    if (!backgroundSound.isPlaying()) {
-        backgroundSound.loop();
-    }
 	// if statements to control the animation of the character when keys are pressed
     
     if(flagpole.isReached == false && lives > 0)
