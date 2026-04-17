@@ -53,7 +53,7 @@ function preload()
     soundFormats('mp3','wav');
 
     //BACKGROUND sound
-    backgroundSound = loadSound('assets/PinkCaddy.mp3');
+    backgroundSound = loadSound('');
     backgroundSound.setVolume(0.1);
 
     //JUMP sound
