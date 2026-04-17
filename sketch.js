@@ -530,3 +530,19 @@ function createPlatforms(x, y, length)
     
     return p;
 }
+
+// This listener checks if the page is visible or hidden
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        // When the user leaves the tab or scrolls away, pause the music
+        if (backgroundMusic) {
+            backgroundMusic.pause();
+        }
+    } else {
+        // Optional: Resume music when they come back
+        // Only if the game has actually started
+        if (backgroundMusic && gameStarted) { 
+            backgroundMusic.play();
+        }
+    }
+});
