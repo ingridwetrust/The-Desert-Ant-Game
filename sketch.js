@@ -89,7 +89,6 @@ function preload()
 function setup()
 {
     createCanvas(1024, 576);
-    backgroundSound.loop();
     floorPos_y = height * 3/4;
     lives = 5;
     startGame();
@@ -327,6 +326,10 @@ function draw()
 
 function keyPressed()
 {
+	{
+    if (!backgroundSound.isPlaying()) {
+        backgroundSound.loop();
+    }
 	// if statements to control the animation of the character when keys are pressed
     
     if(flagpole.isReached == false && lives > 0)
