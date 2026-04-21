@@ -43,11 +43,18 @@ var font;
 
 var platforms;
 var enemies;
+
+// ── Mute toggles ──────────────────────────────────────────────
+var bgMuted  = false;   // background music only
+var sfxMuted = false;   // all other game sounds
+// ──────────────────────────────────────────────────────────────
+
 //for the bouncing motion I used this : https://editor.p5js.org/crecord/sketches/ByWfYwbjb
 /////////////////////////////Beginning///////////////////////////////// 
 var collectable_bounce_ypos;
 var amplitude = 10.0;       // Height of wave
 /////////////////////////////Ending////////////////////////////////////
+
 function preload()
 {
     soundFormats('mp3','wav');
@@ -142,12 +149,15 @@ function draw()
     //Car crash sound play only once
     if(isPlummeting == true && crashhasPlayed == false)
 	{
-		crashSound.play();
+        if (!sfxMuted) crashSound.play();
 		crashhasPlayed = true;
 	}   
 
     renderScore();
     renderLifetoken();
+
+    // ── Mute buttons (drawn in screen space, before camera translate) ──
+    drawMuteButtons();
     
     // Scrolling
     translate(-cameraPosX, 0)
@@ -200,7 +210,7 @@ function draw()
 		
         if(gameoverhasPlayed == false)
 		{
-			gameoverSound.play();
+            if (!sfxMuted) gameoverSound.play();
 			gameoverhasPlayed = true;    
 		}
         return
@@ -235,7 +245,7 @@ function draw()
 		
         if(winninghasPlayed == false)
 		{
-			winningSound.play();
+            if (!sfxMuted) winningSound.play();
         	winninghasPlayed = true;
         	return
 		}
@@ -306,7 +316,7 @@ function draw()
 		{
 			if(lives > 0)
 			{
-				armadilloSound.play();
+                if (!sfxMuted) armadilloSound.play();
 				lives -= 1;
 				retryGame();
 				break;
@@ -314,7 +324,7 @@ function draw()
 		}
 	}
     
-		if(flagpole.isReached == true && lives > 0 && game_score == 25)
+	if(flagpole.isReached == true && lives > 0 && game_score == 25)
 	{
 		isLeft = false;
 		isRight = false;
@@ -343,7 +353,7 @@ function keyPressed()
         else if(keyCode == 87 && isFalling == false && isPlummeting == false || keyCode == 32  && isFalling == false && isPlummeting == false)
         {
             gameChar_y -= 130;
-            jumpSound.play();
+            if (!sfxMuted) jumpSound.play();
         }
      }
     
@@ -367,7 +377,7 @@ function keyPressed()
         else if(keyCode == 87 && isFalling == false && isPlummeting == false || keyCode == 32  && isFalling == false && isPlummeting == false)
         {
             gameChar_y -= 130;
-            jumpSound.play();
+            if (!sfxMuted) jumpSound.play();
         }
     }
     
@@ -407,10 +417,8 @@ function checkCollectable(t_collectable)
     {
         t_collectable.isFound = true;
         game_score += 1;
-        waterSound[floor(random(0,waterSound.length))].play();
-        
+        if (!sfxMuted) waterSound[floor(random(0,waterSound.length))].play();
     }
-     
 }
 
 function checkCanyon(t_canyon)
@@ -486,7 +494,6 @@ function renderLifetoken()
 		textSize(14);
 		text("♥",15 + i * 20,44)
    }
-   
 }
 
 function renderScore()
@@ -497,8 +504,142 @@ function renderScore()
 		textSize(11);
 		text("⬤",15 + i * 20,20)
    }
-   
 }
+
+// ══════════════════════════════════════════════════════════════
+//  MUTE BUTTONS
+//  Two icons in the top-right corner, drawn purely with vertices.
+//  Left icon  = BGM (music note)   — toggles background music
+//  Right icon = SFX (speaker)      — toggles all other sounds
+// ══════════════════════════════════════════════════════════════
+function drawMuteButtons()
+{
+    push();
+    resetMatrix(); // ignore camera translate — stay in screen space
+
+    var b1x = width - 52;  // BGM button centre x
+    var b2x = width - 22;  // SFX button centre x
+    var by  = 22;           // shared y
+
+    // ── BGM: music note ──────────────────────────────────────
+    var col1 = bgMuted ? color(100, 100, 100) : color(255, 255, 255);
+
+    // Note head (oval approximated as 8-vertex polygon)
+    fill(col1);
+    noStroke();
+    beginShape();
+    vertex(b1x - 1, by + 7);
+    vertex(b1x - 4, by + 5);
+    vertex(b1x - 5, by + 3);
+    vertex(b1x - 4, by + 1);
+    vertex(b1x - 1, by);
+    vertex(b1x + 2, by + 2);
+    vertex(b1x + 3, by + 4);
+    vertex(b1x + 2, by + 6);
+    endShape(CLOSE);
+
+    // Stem (thin tall rectangle via vertices)
+    beginShape();
+    vertex(b1x + 2, by + 4);
+    vertex(b1x + 4, by + 4);
+    vertex(b1x + 4, by - 7);
+    vertex(b1x + 2, by - 7);
+    endShape(CLOSE);
+
+    // Flag on top of stem (small wedge)
+    beginShape();
+    vertex(b1x + 4, by - 7);
+    vertex(b1x + 9, by - 4);
+    vertex(b1x + 9, by - 2);
+    vertex(b1x + 4, by - 4);
+    endShape(CLOSE);
+
+    // Red slash when muted
+    if (bgMuted)
+    {
+        stroke(210, 55, 55);
+        strokeWeight(2);
+        line(b1x - 7, by - 9, b1x + 10, by + 9);
+    }
+
+    // ── SFX: speaker ─────────────────────────────────────────
+    var col2 = sfxMuted ? color(100, 100, 100) : color(255, 255, 255);
+
+    fill(col2);
+    noStroke();
+
+    // Speaker body (trapezoid)
+    beginShape();
+    vertex(b2x - 7, by - 3);
+    vertex(b2x - 2, by - 3);
+    vertex(b2x - 2, by + 3);
+    vertex(b2x - 7, by + 3);
+    endShape(CLOSE);
+
+    // Speaker cone (triangle pointing right)
+    beginShape();
+    vertex(b2x - 2, by - 5);
+    vertex(b2x + 3,  by - 9);
+    vertex(b2x + 3,  by + 9);
+    vertex(b2x - 2, by + 5);
+    endShape(CLOSE);
+
+    // Sound waves OR mute X
+    if (!sfxMuted)
+    {
+        // Inner wave — 5-vertex arc approximation
+        noFill();
+        stroke(col2);
+        strokeWeight(1.5);
+        beginShape();
+        vertex(b2x + 5,  by - 4);
+        vertex(b2x + 7,  by - 2);
+        vertex(b2x + 8,  by);
+        vertex(b2x + 7,  by + 2);
+        vertex(b2x + 5,  by + 4);
+        endShape();
+
+        // Outer wave
+        beginShape();
+        vertex(b2x + 7,  by - 7);
+        vertex(b2x + 10, by - 4);
+        vertex(b2x + 11, by);
+        vertex(b2x + 10, by + 4);
+        vertex(b2x + 7,  by + 7);
+        endShape();
+    }
+    else
+    {
+        stroke(210, 55, 55);
+        strokeWeight(2);
+        line(b2x - 8, by - 9, b2x + 11, by + 9);
+    }
+
+    pop();
+}
+
+// ── Click handler: toggle mute on button hit ─────────────────
+function mousePressed()
+{
+    var b1x = width - 52;
+    var b2x = width - 22;
+    var by  = 22;
+    var hitR = 14; // click radius in px
+
+    if (dist(mouseX, mouseY, b1x, by) < hitR)
+    {
+        bgMuted = !bgMuted;
+        if (bgMuted) backgroundSound.pause();
+        else         backgroundSound.loop();
+    }
+
+    if (dist(mouseX, mouseY, b2x, by) < hitR)
+    {
+        sfxMuted = !sfxMuted;
+    }
+}
+
+// ─────────────────────────────────────────────────────────────
 
 function createPlatforms(x, y, length)
 {
